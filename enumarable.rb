@@ -6,8 +6,8 @@ module Enumerable
   # satisfy a certain criteria
   # if no proc is passed return true, else evaluate
   def my_all?(&prc)
+    prc = proc { |obj| obj } unless block_given?
     result = true
-    return result unless block_given? || empty?
 
     index = 0
     until result.equal?(false) || index.equal?(length)
@@ -62,6 +62,7 @@ result = array_of_strings.my_all? do |ele|
 end
 puts "Are all string are above 3 characters? #{result}\n\n"
 
+return
 # manual tests - my_any?
 p "Any (without block)"
 p "Any: [].any? should be false, got #{[].any?}"
