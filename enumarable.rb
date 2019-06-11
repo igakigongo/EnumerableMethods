@@ -60,7 +60,9 @@ array_of_strings = %w[edward iga was here on sunday]
 result = array_of_strings.my_all? do |ele|
   ele.length > 3
 end
-puts "Are all string are above 3 characters? #{result}\n\n"
+puts "All\nAre all string are above 3 characters? #{result}"
+result = [nil, 1, 34].my_all?
+puts "[nil, 1, 34].my_all? should be false, got: #{result}\n\n"
 
 return
 # manual tests - my_any?
