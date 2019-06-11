@@ -53,11 +53,12 @@ module Enumerable
   # provides an enumeration over items,
   # if a block is given - it will be applied to each element
   # befor returning the enumeration
-  def my_each(&prc)
+  def my_each
     return to_enum(:my_each) unless block_given?
 
-    index = 0
-    prc.call(self[index]) && index += 1 until index.equal?(length)
+    tmp = is_a?(Range) ? to_a : self
+    i = 0
+    yield tmp[i] && i += 1 until i.equal?(tmp.length)
     self
   end
 
@@ -72,19 +73,6 @@ module Enumerable
   def my_select; end
 end
 
-# manual tests - my_all?
-puts "Any\n"
-p %w[ant bear cat].all? { |word| word.length >= 3 } #=> true
-p %w[ant bear cat].all? { |word| word.length >= 4 } #=> false
-p %w[ant bear cat].my_all?(/t/)                     #=> false
-p [1, 2i, 3.14].all?(Numeric)                       #=> true
-p [nil, true, 99].all?                              #=> false
-p [].all?                                           #=> true
-return
-puts "\n\nAll\n"
-p %w[ant bear cat].my_any? { |word| word.length >= 3 } #=> true
-p %w[ant bear cat].any? { |word| word.length >= 4 } #=> true
-p %w[ant bear cat].my_any? { |k| /d/.match?(k) }                        #=> false
-p [nil, true, 99].any?(Integer)                     #=> true
-p [nil, true, 99].any?                              #=> true
-p [].any?                                           #=> false
+(1..10).my_each do |k|
+  p k
+end
