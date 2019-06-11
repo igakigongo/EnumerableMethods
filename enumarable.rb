@@ -16,7 +16,19 @@ module Enumerable
     result
   end
 
-  def my_any?; end
+  # check if any element in an enumeration
+  # satisfies a certain criteria/condition
+  # if no proc is passes return false
+  def my_any?(&prc)
+    result = false
+    return result unless block_given? || !empty?
+
+    index = 0
+    until result.equal?(true) || index.equal?(length)
+      result |= prc.call(self[index]) && index += 1
+    end
+    result
+  end
 
   def my_count; end
 
@@ -44,12 +56,26 @@ end
 
 array_of_strings = %w[edward iga was here on sunday]
 
-# manual tests - my_all
+# manual tests - my_all?
 result = array_of_strings.my_all? do |ele|
   ele.length > 3
 end
 puts "Are all string are above 3 characters? #{result}\n\n"
 
+# manual tests - my_any?
+p "Any (without block)"
+p "Any: [].any? should be false, got #{[].any?}"
+p "Any: [].my_any? should be false got #{[].my_any?}"
+puts "\n\n"
+
+p "Any (with block)"
+result = array_of_strings.any? { |s| s.length > 2 }
+p "Any: [].any?(proc) should be true, got #{result}"
+result = array_of_strings.my_any? { |s| s.length > 2 }
+p "Any: [].my_any?(proc) should be false got #{result}"
+puts "\n\n"
+
 # manual tests - my_each
 puts "calling my_each without a block:\n"
 p array_of_strings.my_each
+puts "\n\n"
