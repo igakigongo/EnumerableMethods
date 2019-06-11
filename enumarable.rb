@@ -7,6 +7,7 @@ module Enumerable
   # if no proc is passed return true, else evaluate
   def my_all?(&prc)
     prc = proc { |obj| obj } unless block_given?
+    p prc.class
     result = true
 
     index = 0
@@ -16,16 +17,33 @@ module Enumerable
     result
   end
 
+  # check if elements match patterns
+  def my_all?(pattern)
+    result = true
+    is_regexp = pattern.is_a?(Regexp)
+    index = 0
+    until result.equal?(false) || index.equal?(length)
+      result &= is_regexp ? pattern.match?(self[index]) : self[index].is_a?(pattern)
+      index += 1
+    end
+    result
+  end
+
   # check if any element in an enumeration
   # satisfies a certain criteria/condition
-  # if no proc is passes return false
+  # if no proc is passed return false
   def my_any?(&prc)
-    result = false
-    return result unless block_given? || !empty?
+    p prc.class
+    prc = proc { |obj| obj } unless block_given?
+    result = true
 
     index = 0
-    until result.equal?(true) || index.equal?(length)
-      result |= prc.call(self[index]) && index += 1
+    #until result.equal?(true) || index.equal?(length)
+    until index.equal?(length)
+      v = prc.call(self[index])
+      p "#{self[index]} => #{v}"
+      result |= v
+      index += 1
     end
     result
   end
@@ -54,31 +72,19 @@ module Enumerable
   def my_select; end
 end
 
-array_of_strings = %w[edward iga was here on sunday]
-
 # manual tests - my_all?
-result = array_of_strings.my_all? do |ele|
-  ele.length > 3
-end
-puts "All\nAre all string are above 3 characters? #{result}"
-result = [nil, 1, 34].my_all?
-puts "[nil, 1, 34].my_all? should be false, got: #{result}\n\n"
-
+puts "Any\n"
+p %w[ant bear cat].all? { |word| word.length >= 3 } #=> true
+p %w[ant bear cat].all? { |word| word.length >= 4 } #=> false
+p %w[ant bear cat].my_all?(/t/)                     #=> false
+p [1, 2i, 3.14].all?(Numeric)                       #=> true
+p [nil, true, 99].all?                              #=> false
+p [].all?                                           #=> true
 return
-# manual tests - my_any?
-p "Any (without block)"
-p "Any: [].any? should be false, got #{[].any?}"
-p "Any: [].my_any? should be false got #{[].my_any?}"
-puts "\n\n"
-
-p "Any (with block)"
-result = array_of_strings.any? { |s| s.length > 2 }
-p "Any: [].any?(proc) should be true, got #{result}"
-result = array_of_strings.my_any? { |s| s.length > 2 }
-p "Any: [].my_any?(proc) should be false got #{result}"
-puts "\n\n"
-
-# manual tests - my_each
-puts "calling my_each without a block:\n"
-p array_of_strings.my_each
-puts "\n\n"
+puts "\n\nAll\n"
+p %w[ant bear cat].my_any? { |word| word.length >= 3 } #=> true
+p %w[ant bear cat].any? { |word| word.length >= 4 } #=> true
+p %w[ant bear cat].my_any? { |k| /d/.match?(k) }                        #=> false
+p [nil, true, 99].any?(Integer)                     #=> true
+p [nil, true, 99].any?                              #=> true
+p [].any?                                           #=> false
