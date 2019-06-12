@@ -50,10 +50,15 @@ module Enumerable
 
   def my_map; end
 
-  def my_none?; end
+  # check if none of
+  # implicitly pass a_block if it should be passed into inner functions
+  def my_none?(pattern = nil, &a_block)
+    !my_any?(pattern, &a_block)
+  end
 
   def my_select; end
 end
 
+p (1..10).my_none? { |x| x.negative? }
 p (1..10).all? { |k| k.positive? }
 p (1..10).my_all? { |k| k.positive? }
