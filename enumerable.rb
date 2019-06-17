@@ -49,9 +49,12 @@ module Enumerable
   def my_each
     return to_enum :my_each unless block_given?
 
-    tmp = is_a?(Enumerable) ? to_a : self
+    tmp = is_a?(Range) ? to_a : self
     i = 0
-    yield tmp[i] && i += 1 until i.equal?(tmp.length)
+    until i.equal? tmp.length
+      yield tmp[i]
+      i += 1
+    end
     self
   end
 
@@ -67,14 +70,16 @@ module Enumerable
     self
   end
 
-  def my_inject(param_1 = nil, param_2 = nil)
+  def my_inject(acc = nil, cur = nil)
     tmp = is_a?(Range) ? to_a : self
-    acc = param_1.nil? || param_1.is_a?(Symbol) ? tmp[0] : param_1
-    tmp[0..-1].my_each { |ele| acc = yield(acc, ele) } if block_given? && param_1
-    tmp[1..-1].my_each { |ele| acc = yield(acc, ele) } if block_given? && !param_1
-    tmp[1..-1].my_each { |ele| acc = acc.send(param_1, ele) } if param_1.is_a?(Symbol)
-    tmp[0..-1].my_each { |ele| acc = acc.send(param_2, ele) } if param_2
-    acc
+    a = acc.nil? || acc.is_a?(Symbol) ? tmp[0] : acc
+    if block_given?
+      start = acc ? 0 : 1
+      tmp[start..-1].my_each { |e| a = yield(a, e) }
+    end
+    tmp[1..-1].my_each { |e| a = a.send(acc, e) } if acc.is_a?(Symbol)
+    tmp[0..-1].my_each { |e| a = a.send(cur, e) } if cur
+    a
   end
 
   # map elements using a block
@@ -98,11 +103,7 @@ module Enumerable
     return to_enum :my_select unless block_given?
 
     out = []
-    my_each { |ele| out << ele if (yield ele) }
+    my_each { |ele| out << ele if yield ele }
     out
   end
 end
-
-# p ([1, 2, 3, 4].my_map do |e| e * 2; end)
-
-p [1, 2, 3, 4, 5].my_inject(:+)
