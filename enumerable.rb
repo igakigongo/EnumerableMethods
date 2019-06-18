@@ -70,7 +70,8 @@ module Enumerable
     self
   end
 
-  def my_inject(acc = nil, cur = nil)
+  # reduce/inject method 
+  def my_inject(acc:, cur:)
     tmp = is_a?(Range) ? to_a : self
     a = acc.nil? || acc.is_a?(Symbol) ? tmp[0] : acc
     if block_given?
