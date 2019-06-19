@@ -9,7 +9,7 @@ module Enumerable
     if block_given?
       my_each { |ele| result &= (yield ele) }
     elsif pattern
-      my_each { |ele| result &= ele.equal?(pattern) }
+      my_each { |ele| result &= pattern === ele }
     else
       my_each { |ele| result &= ele }
     end
