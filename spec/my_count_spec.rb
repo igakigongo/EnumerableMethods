@@ -2,7 +2,6 @@
 
 require_relative '../enumerable'
 
-# when .any? should return true
 describe Enumerable do
   describe '.count? should return count of all elements' do
     it 'when no param and block are given' do
@@ -15,7 +14,7 @@ describe Enumerable do
 
     it 'yielding true when a block is given' do
       a = [1, 2, 4, 2]
-      expect(a.my_count { |x| x%2 == 0 }).to eql 3
+      expect(a.my_count(&:even?)).to eql 3
     end
   end
 end
