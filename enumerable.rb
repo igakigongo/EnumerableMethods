@@ -58,7 +58,7 @@ module Enumerable
     self
   end
 
-  # use each - but spill ele, index on each iteration
+  # use each - but emit ele, index on each iteration
   def my_each_with_index
     return to_enum :my_each_with_index unless block_given?
 
