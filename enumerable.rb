@@ -34,7 +34,7 @@ module Enumerable
   def my_count(param = nil)
     total = 0
     if block_given?
-      my_each { |ele| total += 1 if (yield ele) == true }
+      my_each { |ele| total += 1 if yield ele }
     else
       return length if param.nil?
 
