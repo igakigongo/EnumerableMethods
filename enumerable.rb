@@ -23,7 +23,7 @@ module Enumerable
     if block_given?
       my_each { |ele| return true if yield ele }
     elsif pattern
-      my_each { |ele| return true if ele.equal?(pattern) }
+      my_each { |ele| return true if pattern === ele }
     else
       my_each { |ele| return true if ele }
     end
