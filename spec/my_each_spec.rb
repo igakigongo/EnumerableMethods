@@ -15,18 +15,10 @@ describe Enumerable do
       end.to yield_successive_args(1, 2, 3, 4)
     end
 
-    describe 'correct count to indicate correct iteration' do
-      it 'when a Range is given' do
-        c = 0
-        (1..10).my_each { |_| c += 1 }
-        expect(c).to eql 10
-      end
-
-      it 'when an Enumerable is given' do
-        c = 0
-        (1..10).to_a.my_each { |_| c += 1 }
-        expect(c).to eql 10
-      end
+    it 'yields when given a Range' do
+      expect do |b|
+        (1..4).my_each(&b)
+      end.to yield_successive_args(1, 2, 3, 4)
     end
   end
 end
