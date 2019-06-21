@@ -3,7 +3,6 @@
 require_relative '../enumerable'
 
 # when .my_none? should return true
-# [1, 3.14, 42].none?(Float)                         #=> false
 describe Enumerable do
   context '.none? should return true when no item' do
     it 'exists in enumerable' do
