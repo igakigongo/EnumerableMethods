@@ -21,7 +21,7 @@ describe Enumerable do
     end
 
     it 'should evaluate a binary operation correctly when given a block' do
-      longest = %w[cat sheep bear].inject do |memo, word|
+      longest = %w[cat sheep bear].my_inject do |memo, word|
         memo.length > word.length ? memo : word
       end
       expect(longest).to match(/sheep/)
